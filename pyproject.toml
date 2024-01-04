@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "inteleld"
+version = "0.1.0"
+description = ""
+authors = ["nick"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^4.2.7"
+djoser = "^2.2.2"
+python-dotenv = "^1.0.0"
+djangorestframework = "^3.14.0"
+setuptools = "^69.0.2"
+pyowm = "^3.3.0"
+requests = "^2.31.0"
+celery = "^5.3.6"
+redis = "^5.0.1"
+django-redis = "^5.4.0"
+django-cors-headers = "^4.3.1"
+flower = "^2.0.1"
+eventlet = "^0.33.3"
+gunicorn = "^21.2.0"
+whitenoise = "^6.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
