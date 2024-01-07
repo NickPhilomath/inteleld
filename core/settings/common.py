@@ -142,7 +142,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60 * 24 * 365),
 }
 
-# AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "api.User"
 
 # DJOSER = {
 #     'SERIALIZERS': {

@@ -1,3 +1,14 @@
+USER_ROLES = [
+    ("adm", "Admin"),
+    ("own", "Owner"),
+    ("dis", "Dispatcher"),
+    ("upd", "Updater"),
+    ("flm", "Fleet manager"),
+    ("sam", "Safety manager"),
+    ("acc", "Accountant"),
+    ("gue", "Guest"),
+]
+
 LOG_STATUS = [
     ("of", "OFF duty"),
     ("sb", "Sleeper berth"),
@@ -8,3 +19,130 @@ LOG_STATUS = [
 ]
 
 DEFAULT_LOG_STATUS = "of"
+
+# LOG_STATUS_CHOICES = [
+#     ('OFF', 'OFF'),
+#     ('SB', 'SB'),
+#     ('DR', 'DR'),
+#     ('ON', 'ON'),
+#     ('YM', 'YM'),
+#     ('PC', 'PC'),
+#     ('LIN', 'LOGIN'),
+#     ('LOU', 'LOGOUT'),
+#     ('POF', 'POWER OFF'),
+#     ('PON', 'POWER ON'),
+#     ('CER', 'CERTIFY'),
+#     ('INT', 'INTERMEDIATE')
+# ]
+
+YEARS = (
+    ("Y04", "2004"),
+    ("Y05", "2005"),
+    ("Y06", "2006"),
+    ("Y07", "2007"),
+    ("Y08", "2008"),
+    ("Y09", "2009"),
+    ("Y10", "2010"),
+    ("Y11", "2011"),
+    ("Y12", "2012"),
+    ("Y13", "2013"),
+    ("Y14", "2014"),
+    ("Y15", "2015"),
+    ("Y16", "2016"),
+    ("Y17", "2017"),
+    ("Y18", "2018"),
+    ("Y19", "2019"),
+    ("Y20", "2020"),
+    ("Y21", "2021"),
+    ("Y22", "2022"),
+    ("Y23", "2023"),
+    ("Y24", "2024"),
+    ("Y24", "2025"),
+    ("Y24", "2026"),
+)
+
+DEFAULT_YEAR = "Y24"
+
+FUEL_TYPE = (
+    ("di", "Diesel"),
+    ("ga", "Gasoline"),
+    ("pr", "Propane"),
+    ("li", "Liquid Natural Gas"),
+    ("co", "Compressed Natural Gas"),
+    ("me", "Methanol"),
+    ("e", "E-85"),
+    ("m", "M-85"),
+    ("a", "A55"),
+    ("bi", "Biodisel"),
+    ("o", "Other"),
+)
+
+TIME_ZONES = [
+    ("US/Cent", "US/Central"),
+    ("US/East", "US/Eastern"),
+    ("US/Moun", "US/Mountain"),
+    ("US/Paci", "US/Pacific"),
+]
+
+COUNTRIES = [
+    ("US", "United States"),
+    ("CA", "Canada"),
+]
+
+STATES = [
+    ("AK", "Alaska"),
+    ("AL", "Alabama"),
+    ("AR", "Arkansas"),
+    ("AS", "American Samoa"),
+    ("AZ", "Arizona"),
+    ("CA", "California"),
+    ("CO", "Colorado"),
+    ("CT", "Connecticut"),
+    ("DC", "District of Columbia"),
+    ("DE", "Delaware"),
+    ("FL", "Florida"),
+    ("GA", "Georgia"),
+    ("GU", "Guam"),
+    ("HI", "Hawaii"),
+    ("IA", "Iowa"),
+    ("ID", "Idaho"),
+    ("IL", "Illinois"),
+    ("IN", "Indiana"),
+    ("KS", "Kansas"),
+    ("KY", "Kentucky"),
+    ("LA", "Louisiana"),
+    ("MA", "Massachusetts"),
+    ("MD", "Maryland"),
+    ("ME", "Maine"),
+    ("MI", "Michigan"),
+    ("MN", "Minnesota"),
+    ("MO", "Missouri"),
+    ("MS", "Mississippi"),
+    ("MT", "Montana"),
+    ("NC", "North Carolina"),
+    ("ND", "North Dakota"),
+    ("NE", "Nebraska"),
+    ("NH", "New Hampshire"),
+    ("NJ", "New Jersey"),
+    ("NM", "New Mexico"),
+    ("NV", "Nevada"),
+    ("NY", "New York"),
+    ("OH", "Ohio"),
+    ("OK", "Oklahoma"),
+    ("OR", "Oregon"),
+    ("PA", "Pennsylvania"),
+    ("PR", "Puerto Rico"),
+    ("RI", "Rhode Island"),
+    ("SC", "South Carolina"),
+    ("SD", "South Dakota"),
+    ("TN", "Tennessee"),
+    ("TX", "Texas"),
+    ("UT", "Utah"),
+    ("VA", "Virginia"),
+    ("VI", "Virgin Islands"),
+    ("VT", "Vermont"),
+    ("WA", "Washington"),
+    ("WI", "Wisconsin"),
+    ("WV", "West Virginia"),
+    ("WY", "Wyoming"),
+]

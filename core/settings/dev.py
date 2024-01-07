@@ -1,6 +1,7 @@
 from .common import *
 
 DEBUG = True
+# ALLOWED_HOSTS = ["localhost"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
