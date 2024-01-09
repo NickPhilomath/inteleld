@@ -26,7 +26,7 @@ class Company(models.Model):
 
 class User(AbstractUser):
     # email = models.EmailField(unique=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     role = models.CharField(max_length=3, choices=USER_ROLES)

@@ -1,6 +1,7 @@
 USER_ROLES = [
-    ("adm", "Admin"),
+    ("dev", "Developer"),
     ("own", "Owner"),
+    ("adm", "Admin"),
     ("dis", "Dispatcher"),
     ("upd", "Updater"),
     ("flm", "Fleet manager"),
