@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .tasks import notify_customers, update_trucks
-from .models import User, Access, Company
+from .models import User, Access, Company, Log
 from .serializers import CompanySerializer, UserSerializer, UserCreateSerializer
 
 
@@ -18,7 +18,7 @@ def custom404(request, exception=None):
     )
 
 
-def check_access(user, source, type):
+def check_access(user, source: str, type):
     # if superuser always pass him :)
     if user.is_superuser:
         return True
@@ -35,15 +35,6 @@ def check_access(user, source, type):
 def ping_pong(request):
     # update_trucks()
     return Response("pong", status=status.HTTP_200_OK)
-
-
-@api_view(["GET"])
-@permission_classes([AllowAny])
-def trucks(request):
-    data = []
-    # if cache.get("trucks"):
-    #     data = cache.get("trucks")
-    return Response({"result": data}, status=status.HTTP_200_OK)
 
 
 @api_view(["GET", "POST", "PUT", "DELETE"])
@@ -102,8 +93,7 @@ def users(request):
         # check for allowed users
         if check_access(request.user, "users", "c"):
             user_serializer = UserCreateSerializer(data=request.data)
-            valid_user = user_serializer.is_valid()
-            if valid_user:
+            if user_serializer.is_valid():
                 user_serializer.save()
                 return Response(
                     {"success": "user has been succesfully created"},
@@ -115,6 +105,8 @@ def users(request):
             status=status.HTTP_403_FORBIDDEN,
         )
 
+
+"""
     {
         "username": "test",
         "role": "own",
@@ -123,18 +115,75 @@ def users(request):
         "last_name": "lname",
     }
 
-    # if request.method == "PUT":
-    #     user = User.objects.get(pk=request.data["id"])
-    #     if not request.user == user:
-    #         user_serializer = UserSerializer(instance=user, data=request.data)
-    #         valid_user = user_serializer.is_valid()
-    #         if valid_user:
-    #             updated_user = user_serializer.save()
-    #             return Response(
-    #                 {"success": "user has been succesfully updated"},
-    #                 status=status.HTTP_200_OK,
-    #             )
-    #         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #     return Response(
-    #         {"detail": "you cannot update yourself"}, status=status.HTTP_403_FORBIDDEN
-    #     )
+"""
+# if request.method == "PUT":
+#     user = User.objects.get(pk=request.data["id"])
+#     if not request.user == user:
+#         user_serializer = UserSerializer(instance=user, data=request.data)
+#         valid_user = user_serializer.is_valid()
+#         if valid_user:
+#             updated_user = user_serializer.save()
+#             return Response(
+#                 {"success": "user has been succesfully updated"},
+#                 status=status.HTTP_200_OK,
+#             )
+#         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     return Response(
+#         {"detail": "you cannot update yourself"}, status=status.HTTP_403_FORBIDDEN
+#     )
+
+
+@api_view(["GET", "POST", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def drivers(request):
+    if request.method == "GET":
+        pass
+
+    if request.method == "POST":
+        pass
+
+    if request.method == "PUT":
+        pass
+
+    if request.method == "DELETE":
+        pass
+
+
+@api_view(["GET", "POST", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def trucks(request):
+    if request.method == "GET":
+        if check_access(request.user, "trucks", "v"):
+            return Response("you are rak - authorized", status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "you have no access to view trucks"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if request.method == "POST":
+        pass
+
+    if request.method == "PUT":
+        pass
+
+    if request.method == "DELETE":
+        pass
+
+
+@api_view(["GET", "POST", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def logs(request):
+    if request.method == "GET":
+        pass
+
+    if request.method == "POST":
+        request.data
+
+        log = Log(request.data)
+        log.create()
+
+    if request.method == "PUT":
+        pass
+
+    if request.method == "DELETE":
+        pass

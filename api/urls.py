@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import ping_pong, users, companies
+from .views import ping_pong, users, companies, trucks
 
 urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
@@ -10,4 +10,5 @@ urlpatterns = [
     path("ping/", ping_pong),
     path("companies/", companies),
     path("users/", users),
+    path("trucks/", trucks),
 ]
