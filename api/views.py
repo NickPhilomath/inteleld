@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .tasks import notify_customers, update_trucks
-from .models import User, Company
+from .models import User, Access, Company
 from .serializers import CompanySerializer, UserSerializer, UserCreateSerializer
 
 
@@ -16,6 +16,18 @@ def custom404(request, exception=None):
     return JsonResponse(
         {"status_code": 404, "detail": "The resourse was not found"}, status=404
     )
+
+
+def check_access(user, source, type):
+    # if superuser always pass him :)
+    if user.is_superuser:
+        return True
+
+    access = Access.objects.filter(pk=user.access_id).values(source)
+    # print(str(access.query))
+    if access:
+        return type in access[0][source]
+    return False
 
 
 @api_view(["GET"])
@@ -71,26 +83,24 @@ def companies(request):
 
 
 @api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def users(request):
     if request.method == "GET":
-        # if check_permission(request.user, 'view', 'user'):
-        # if request.GET.get("id", None):
-        #     user = User.objects.get(pk=request.GET.get("id"))
-        #     serializer = UserSerializer(user)
-        # else:
-        if request.user.role == "dev":
-            users = User.objects.all()
-        else:
-            users = User.objects.filter(company_id=request.user.company_id)
-        serializer = UserSerializer(users, many=True)
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
-        # return Response({'detail': 'you have no access to view users'}, status=status.HTTP_403_FORBIDDEN)
+        if check_access(request.user, "users", "v"):
+            if request.user.role == "dev":
+                users = User.objects.all()
+            else:
+                users = User.objects.filter(company_id=request.user.company_id)
+            serializer = UserSerializer(users, many=True)
+            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "you have no access to view users"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     if request.method == "POST":
         # check for allowed users
-        role = request.user.role
-        if role == "dev" or role == "own" or role == "adm":
+        if check_access(request.user, "users", "c"):
             user_serializer = UserCreateSerializer(data=request.data)
             valid_user = user_serializer.is_valid()
             if valid_user:

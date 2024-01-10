@@ -24,12 +24,21 @@ class Company(models.Model):
     time_zone = models.CharField(max_length=7, choices=TIME_ZONES, default="US/East")
 
 
+class Access(models.Model):
+    companies = models.CharField(max_length=4, default="")
+    users = models.CharField(max_length=4, default="")
+    drivers = models.CharField(max_length=4, default="")
+    trucks = models.CharField(max_length=4, default="")
+    logs = models.CharField(max_length=4, default="")
+
+
 class User(AbstractUser):
     # email = models.EmailField(unique=True)
     company = models.ForeignKey(Company, null=True, on_delete=models.CASCADE)
+    access = models.OneToOneField(Access, null=True, on_delete=models.SET_NULL)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
-    role = models.CharField(max_length=3, choices=USER_ROLES)
+    role = models.CharField(max_length=3, null=True, choices=USER_ROLES)
 
 
 class Location(models.Model):
