@@ -10,6 +10,8 @@ load_dotenv()
 
 
 def get_list(text):
+    if not text:
+        return []
     return [item.strip() for item in text.split(",")]
 
 

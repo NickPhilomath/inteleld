@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .tasks import notify_customers, update_trucks
-from .models import User, Access, Company, Log
-from .serializers import CompanySerializer, UserSerializer, UserCreateSerializer
+from .models import User, Access, Company, Log, Truck
+from .serializers import CompanySerializer, UserSerializer, UserCreateSerializer, TrucksSerializer
 
 
 def custom404(request, exception=None):
@@ -154,14 +154,21 @@ def drivers(request):
 def trucks(request):
     if request.method == "GET":
         if check_access(request.user, "trucks", "v"):
-            return Response("you are rak - authorized", status=status.HTTP_200_OK)
+            trucks = Truck.objects.filter(company_id=request.user.company_id)
+            serializer = TrucksSerializer(trucks, many=True)
+            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
         return Response(
             {"detail": "you have no access to view trucks"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
     if request.method == "POST":
-        pass
+        if check_access(request.user, "trucks", "c"):
+            return Response("you are rak - authorized", status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "you have no access to create trucks"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     if request.method == "PUT":
         pass
