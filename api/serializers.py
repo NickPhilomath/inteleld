@@ -61,3 +61,22 @@ class TrucksSerializer(ModelSerializer):
     class Meta:
         model = Truck
         fields = "__all__"
+
+
+class TrucksUpdateSerializer(ModelSerializer):
+    # appuser = AppUserSerializer(read_only=True)
+    class Meta:
+        model = Truck
+        fields = [
+            "unit_number",
+            "make",
+            "model",
+            "year",
+            "license_state",
+            "license_number",
+            "vin_number",
+            "fuel_type",
+            "eld_device",
+            "notes",
+            "is_active",
+        ]

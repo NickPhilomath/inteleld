@@ -8,12 +8,14 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .tasks import notify_customers, update_trucks
-from .models import User, Access, Company, Log, Truck
+from .models import User, Access, Company, Log, Truck, Driver
 from .serializers import (
     CompanySerializer,
     UserSerializer,
     UserCreateSerializer,
     TrucksSerializer,
+    TrucksUpdateSerializer,
+    DriverSerializer,
 )
 
 
@@ -143,7 +145,9 @@ def users(request):
 def drivers(request):
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
-            pass
+            drivers = Driver.objects.filter(company_id=request.user.company_id)
+            driver_serializer = DriverSerializer(drivers, many=True)
+            return Response({"data": driver_serializer.data}, status=status.HTTP_200_OK)
         return Response(
             {"detail": "you have no access to view drivers"},
             status=status.HTTP_403_FORBIDDEN,
@@ -174,7 +178,7 @@ def trucks(request):
 
     if request.method == "POST":
         if check_access(request.user, "trucks", "c"):
-            request.data['company'] = request.user.company_id    
+            request.data["company"] = request.user.company_id
             trucks_serializer = TrucksSerializer(data=request.data)
             if trucks_serializer.is_valid():
                 trucks_serializer.save()
@@ -182,44 +186,59 @@ def trucks(request):
                     {"success": "truck has been succesfully created"},
                     status=status.HTTP_201_CREATED,
                 )
-            return Response(trucks_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                trucks_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
         return Response(
             {"detail": "you have no access to create trucks"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
     if request.method == "PUT":
-        if check_access(request.user, "trucks", "u"): 
-            if hasattr(request.data, "id"): 
-                truck = Truck.objects.get(pk = request.data["id"])
-                truck_serializer = TrucksSerializer(instance=truck, data=request.data)
+        if check_access(request.user, "trucks", "u"):
+            # print(request.data, hasattr(request.data, "id"), request.data.get("id"))
+            if request.data.get("id"):
+                truck = Truck.objects.get(pk=request.data["id"])
+                truck_serializer = TrucksUpdateSerializer(
+                    instance=truck, data=request.data
+                )
                 if truck_serializer.is_valid():
                     truck_serializer.save()
+
                     return Response(
                         {"success": "truck has been succesfully updated"},
                         status=status.HTTP_200_OK,
                     )
-                return Response(truck_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"detail": "id is required to update truck"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    truck_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                )
+            return Response(
+                {"detail": "id is required to update truck"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response(
             {"detail": "you have no access to update trucks"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
     if request.method == "DELETE":
-        if check_access(request.user, "trucks", "d"): 
-            if hasattr(request.data, "id"): 
-                truck = Truck.objects.get(pk = request.data["id"])
+        if check_access(request.user, "trucks", "d"):
+            if hasattr(request.data, "id"):
+                truck = Truck.objects.get(pk=request.data["id"])
                 truck.delete()
                 return Response(
-                        {"success": "truck has been succesfully deleted"},
-                        status=status.HTTP_200_OK,
-                    )
-            return Response({"detail": "id is required to delete truck"}, status=status.HTTP_400_BAD_REQUEST)
+                    {"success": "truck has been succesfully deleted"},
+                    status=status.HTTP_200_OK,
+                )
+            return Response(
+                {"detail": "id is required to delete truck"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response(
             {"detail": "you have no access to update trucks"},
             status=status.HTTP_403_FORBIDDEN,
         )
+
 
 """
     {
@@ -228,6 +247,11 @@ def trucks(request):
         "unit_number": "11111",
         "make": "abcd",
         "model": "defg"
+    }
+
+    {
+        "id": 1,
+        "unit_number": "asdf"
     }
 
 """
