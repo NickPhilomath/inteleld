@@ -45,27 +45,66 @@ def ping_pong(request):
 @api_view(["GET", "POST", "PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 def companies(request):
-    # allow only dev users
-    if not request.user.role == "dev":
+    if request.method == "GET":
+        if check_access(request.user, "companies", "v"):
+            companies = Company.objects.all()
+            serializer = CompanySerializer(companies, many=True)
+            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
         return Response(
-            {"detail": "you have no access to this endpoint"},
+            {"detail": "you have no access to view companies"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
-    if request.method == "GET":
-        companies = Company.objects.all()
-        serializer = CompanySerializer(companies, many=True)
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
-
     if request.method == "POST":
-        serializer = CompanySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {"success": "company has been succesfully created"},
-                status=status.HTTP_201_CREATED,
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if check_access(request.user, "companies", "v"):
+            serializer = CompanySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {"success": "company has been succesfully created"},
+                    status=status.HTTP_201_CREATED,
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "you have no access to view users"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+    if request.method == "PUT":
+        if check_access(request.user, "companies", "u"): 
+            if hasattr(request.data, "id"): 
+                company = Company.objects.get(pk = request.data["id"])
+                company_serializer = CompanySerializer(instance=company, data=request.data)
+                if company_serializer.is_valid():
+                    company_serializer.save()
+                    return Response(
+                        {"success": "company has been succesfully updated"},
+                        status=status.HTTP_200_OK,
+                    )
+                return Response(company_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "id is required to update company"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "you have no access to update companies"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if request.method == "DELETE":
+        if check_access(request.user, "companies", "d"): 
+            if hasattr(request.data, "id"): 
+                company = Company.objects.get(pk = request.data["id"])
+                company.delete()
+                return Response(
+                        {"success": "company has been succesfully deleted"},
+                        status=status.HTTP_200_OK,
+                    )
+            return Response({"detail": "id is required to delete company"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "you have no access to update trucks"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+    
+
+    
+
     """
     {
         "name": "samauto",
@@ -190,17 +229,17 @@ def trucks(request):
 
     if request.method == "PUT":
         if check_access(request.user, "trucks", "u"): 
-            if hasattr(request.data, "id"): 
-                truck = Truck.objects.get(pk = request.data["id"])
-                truck_serializer = TrucksSerializer(instance=truck, data=request.data)
-                if truck_serializer.is_valid():
-                    truck_serializer.save()
-                    return Response(
-                        {"success": "truck has been succesfully updated"},
-                        status=status.HTTP_200_OK,
-                    )
-                return Response(truck_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"detail": "id is required to update truck"}, status=status.HTTP_400_BAD_REQUEST)
+            #if getattr(request.data, "id", False): 
+            truck = Truck.objects.get(pk = request.data["id"])
+            truck_serializer = TrucksSerializer(instance=truck, data=request.data)
+            if truck_serializer.is_valid():
+                truck_serializer.update()
+                return Response(
+                    {"success": "truck has been succesfully updated"},
+                    status=status.HTTP_200_OK,
+                )
+            return Response(truck_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            #return Response({"detail": "id is required to update truck"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(
             {"detail": "you have no access to update trucks"},
             status=status.HTTP_403_FORBIDDEN,
