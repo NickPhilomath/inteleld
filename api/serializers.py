@@ -8,7 +8,7 @@ from djoser.serializers import (
     UserSerializer as BaseUserSerializer,
     UserCreateSerializer as BaseUserCreateSerializer,
 )
-from .models import User, Company, Driver
+from .models import User, Company, Truck, Driver
 
 
 # serializers here
@@ -56,5 +56,8 @@ class DriverSerializer(ModelSerializer):
         exclude = ["user"]
 
 
-class TruckSerializer(ModelSerializer):
-    pass
+class TrucksSerializer(ModelSerializer):
+    # appuser = AppUserSerializer(read_only=True)
+    class Meta:
+        model = Truck
+        fields = "__all__"
