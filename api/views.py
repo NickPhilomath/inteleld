@@ -9,7 +9,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .tasks import notify_customers, update_trucks
 from .models import User, Access, Company, Log, Truck
-from .serializers import CompanySerializer, UserSerializer, UserCreateSerializer, TrucksSerializer
+from .serializers import (
+    CompanySerializer,
+    UserSerializer,
+    UserCreateSerializer,
+    TrucksSerializer,
+)
 
 
 def custom404(request, exception=None):
@@ -137,7 +142,12 @@ def users(request):
 @permission_classes([IsAuthenticated])
 def drivers(request):
     if request.method == "GET":
-        pass
+        if check_access(request.user, "drivers", "v"):
+            pass
+        return Response(
+            {"detail": "you have no access to view drivers"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     if request.method == "POST":
         pass
