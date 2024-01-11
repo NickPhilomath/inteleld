@@ -41,6 +41,7 @@ def users(request):
 
 
 """
+example user data for testing
     {
         "username": "test",
         "role": "own",

@@ -85,6 +85,7 @@ def trucks(request):
 
 
 """
+example truck data for posting
     {
         "id": "1",
         "company": "1",
@@ -92,7 +93,8 @@ def trucks(request):
         "make": "abcd",
         "model": "defg"
     }
-
+    
+example truck data for updating
     {
         "id": 1,
         "unit_number": "asdf"

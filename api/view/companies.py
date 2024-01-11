@@ -36,7 +36,7 @@ def companies(request):
         )
     if request.method == "PUT":
         if check_access(request.user, "companies", "u"):
-            if hasattr(request.data, "id"):
+            if request.data.get("id"):
                 company = Company.objects.get(pk=request.data["id"])
                 company_serializer = CompanySerializer(
                     instance=company, data=request.data
@@ -77,11 +77,12 @@ def companies(request):
             status=status.HTTP_403_FORBIDDEN,
         )
 
-    """
-    {
-        "name": "samauto",
-        "address": "address",
-        "city": "new york",
-        "zip_code": "19000"
-    }
-    """
+"""
+example company data for testing 
+{
+    "name": "samauto",
+    "address": "address",
+    "city": "new york",
+    "zip_code": "19000"
+}
+"""
