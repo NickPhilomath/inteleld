@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import User
-from ..serializers import UserSerializer, UserCreateSerializer
+from ..models import User, Access
+from ..serializers import UserSerializer, UserCreateSerializer, AccessSerializer
 from ..views import check_access
 
 
@@ -12,10 +12,7 @@ from ..views import check_access
 def users(request):
     if request.method == "GET":
         if check_access(request.user, "users", "v"):
-            if request.user.role == "dev":
-                users = User.objects.all()
-            else:
-                users = User.objects.filter(company_id=request.user.company_id)
+            users = User.objects.filter(company_id=request.user.company_id)
             serializer = UserSerializer(users, many=True)
             return Response({"data": serializer.data}, status=status.HTTP_200_OK)
         return Response(
@@ -24,30 +21,77 @@ def users(request):
         )
 
     if request.method == "POST":
-        # check for allowed users
         if check_access(request.user, "users", "c"):
+            request.data["company"] = request.user.company_id
+            access_data = request.data.get("access")
             user_serializer = UserCreateSerializer(data=request.data)
-            if user_serializer.is_valid():
-                user_serializer.save()
+            access_serializer = AccessSerializer(data=access_data)
+            valid_user = user_serializer.is_valid()
+            valid_access = access_serializer.is_valid()
+            if valid_user and valid_access:
+                saved_access = access_serializer.save()
+                user_serializer.save(access_id=saved_access.id)
                 return Response(
                     {"success": "user has been succesfully created"},
                     status=status.HTTP_201_CREATED,
                 )
-            return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                user_serializer.errors | access_serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response(
             {"detail": "you have no access to create a user"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if request.method == "PUT":
+        if check_access(request.user, "users", "u"):
+            if request.data.get("id"):
+                access_data = request.data.get("access")
+                user = User.objects.get(pk=request.data["id"])
+                access = Access.objects.get(pk=user.access_id)
+                user_serializer = UserSerializer(instance=user, data=request.data)
+                access_serializer = AccessSerializer(instance=access, data=access_data)
+                valid_user = user_serializer.is_valid()
+                valid_access = access_serializer.is_valid()
+                if valid_user and valid_access:
+                    valid_user.save()
+                    valid_access.save()
+                    return Response(
+                        {"success": "user has been succesfully updated"},
+                        status=status.HTTP_200_OK,
+                    )
+                return Response(
+                    user_serializer.errors | access_serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            return Response(
+                {"detail": "id is required to update user"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(
+            {"detail": "you have no access to update user"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
 
 """
 example user data for testing
+    
     {
-        "username": "test",
+        "username": "test2",
         "role": "own",
         "password": "!2344321",
         "first_name": "fname",
         "last_name": "lname",
+        "access": {
+            "companies": "v",
+            "logs": "v",
+            "drivers": "v",
+            "trucks": "v",
+            "users": "v"
+         }
     }
 
 """

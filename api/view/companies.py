@@ -41,7 +41,9 @@ def companies(request):
                 company_serializer = CompanySerializer(
                     instance=company, data=request.data
                 )
+                print(company_serializer.initial_data, company)
                 if company_serializer.is_valid():
+                    # company_serializer.update(instance=company)
                     company_serializer.save()
                     return Response(
                         {"success": "company has been succesfully updated"},
@@ -76,6 +78,7 @@ def companies(request):
             {"detail": "you have no access to update trucks"},
             status=status.HTTP_403_FORBIDDEN,
         )
+
 
 """
 example company data for testing 

@@ -8,13 +8,19 @@ from djoser.serializers import (
     UserSerializer as BaseUserSerializer,
     UserCreateSerializer as BaseUserCreateSerializer,
 )
-from .models import User, Company, Truck, Driver
+from .models import User, Access, Company, Truck, Driver
 
 
 # serializers here
 class CompanySerializer(ModelSerializer):
     class Meta:
         model = Company
+        fields = "__all__"
+
+
+class AccessSerializer(ModelSerializer):
+    class Meta:
+        model = Access
         fields = "__all__"
 
 
