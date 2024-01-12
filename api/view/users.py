@@ -90,6 +90,27 @@ def users(request):
             {"detail": "you have no access to update user"},
             status=status.HTTP_403_FORBIDDEN,
         )
+    
+    if request.method == "DELETE":
+        if check_access(request.user, "users", "d"):
+            if request.data.get("id"):
+                user = User.objects.get(pk=request.data["id"])
+                user_access = Access.objects.get(pk = user.access_id)
+                user.delete()
+                user_access.delete()
+                return Response(
+                    {"success": "user has been succesfully deleted"},
+                    status=status.HTTP_200_OK,
+                )
+            return Response(
+                {"detail": "id is required to delete user"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(
+            {"detail": "you have no access to delete user"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
 
 
 """

@@ -79,7 +79,7 @@ def trucks(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(
-            {"detail": "you have no access to update trucks"},
+            {"detail": "you have no access to delete trucks"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
