@@ -23,18 +23,31 @@ def users(request):
     if request.method == "POST":
         if check_access(request.user, "users", "c"):
             request.data["company"] = request.user.company_id
-            access_data = request.data.get("access")
+
             user_serializer = UserCreateSerializer(data=request.data)
-            access_serializer = AccessSerializer(data=access_data)
-            valid_user = user_serializer.is_valid()
-            valid_access = access_serializer.is_valid()
-            if valid_user and valid_access:
-                saved_access = access_serializer.save()
-                user_serializer.save(access_id=saved_access.id)
+            if user_serializer.is_valid():
+                user_serializer.save()
                 return Response(
                     {"success": "user has been succesfully created"},
                     status=status.HTTP_201_CREATED,
                 )
+            return Response(
+                user_serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+            access_data = request.data.get("access")
+            access_serializer = AccessSerializer(data=access_data)
+            if access_serializer.is_valid():
+                saved_access = access_serializer.save()
+                request.data["access"] = saved_access.id
+                user_serializer = UserCreateSerializer(data=request.data)
+                if user_serializer.is_valid():
+                    user_serializer.save()
+                    return Response(
+                        {"success": "user has been succesfully created"},
+                        status=status.HTTP_201_CREATED,
+                    )
             return Response(
                 user_serializer.errors | access_serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
@@ -50,13 +63,16 @@ def users(request):
                 access_data = request.data.get("access")
                 user = User.objects.get(pk=request.data["id"])
                 access = Access.objects.get(pk=user.access_id)
-                user_serializer = UserSerializer(instance=user, data=request.data)
                 access_serializer = AccessSerializer(instance=access, data=access_data)
+                print(access_data)
+                request.data["access"] = access.id
+                print(access_data)
+                user_serializer = UserSerializer(instance=user, data=request.data)
                 valid_user = user_serializer.is_valid()
                 valid_access = access_serializer.is_valid()
                 if valid_user and valid_access:
-                    valid_user.save()
-                    valid_access.save()
+                    user_serializer.save()
+                    access_serializer.save()
                     return Response(
                         {"success": "user has been succesfully updated"},
                         status=status.HTTP_200_OK,

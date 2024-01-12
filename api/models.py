@@ -25,11 +25,11 @@ class Company(models.Model):
 
 
 class Access(models.Model):
-    companies = models.CharField(max_length=4)
-    users = models.CharField(max_length=4)
-    drivers = models.CharField(max_length=4)
-    trucks = models.CharField(max_length=4)
-    logs = models.CharField(max_length=4)
+    companies = models.CharField(max_length=4, blank=True)
+    users = models.CharField(max_length=4, blank=True)
+    drivers = models.CharField(max_length=4, blank=True)
+    trucks = models.CharField(max_length=4, blank=True)
+    logs = models.CharField(max_length=4, blank=True)
 
 
 class User(AbstractUser):
