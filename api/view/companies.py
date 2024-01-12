@@ -75,7 +75,7 @@ def companies(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(
-            {"detail": "you have no access to update trucks"},
+            {"detail": "you have no access to delte company"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
