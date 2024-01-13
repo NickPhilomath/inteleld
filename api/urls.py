@@ -6,7 +6,7 @@ from .view.companies import companies
 from .view.drivers import drivers, driver
 from .view.logs import logs
 from .view.trucks import trucks
-from .view.users import users
+from .view.users import users, user
 
 urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
@@ -19,4 +19,5 @@ urlpatterns = [
     path("logs/", logs),
     path("trucks/", trucks),
     path("users/", users),
+    path("users/<int:id>", user),
 ]

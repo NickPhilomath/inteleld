@@ -7,7 +7,7 @@ from ..serializers import UserSerializer, UserCreateSerializer, AccessSerializer
 from ..views import check_access
 
 
-@api_view(["GET", "POST", "PUT", "DELETE"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def users(request):
     if request.method == "GET":
@@ -57,6 +57,10 @@ def users(request):
             status=status.HTTP_403_FORBIDDEN,
         )
 
+
+@api_view(["PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def user(request, id):
     if request.method == "PUT":
         if check_access(request.user, "users", "u"):
             if request.data.get("id"):
@@ -90,12 +94,12 @@ def users(request):
             {"detail": "you have no access to update user"},
             status=status.HTTP_403_FORBIDDEN,
         )
-    
+
     if request.method == "DELETE":
         if check_access(request.user, "users", "d"):
             if request.data.get("id"):
                 user = User.objects.get(pk=request.data["id"])
-                user_access = Access.objects.get(pk = user.access_id)
+                user_access = Access.objects.get(pk=user.access_id)
                 user.delete()
                 user_access.delete()
                 return Response(
@@ -110,7 +114,6 @@ def users(request):
             {"detail": "you have no access to delete user"},
             status=status.HTTP_403_FORBIDDEN,
         )
-
 
 
 """
