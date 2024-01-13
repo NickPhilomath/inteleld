@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from ..models import Company
-from ..serializers import CompanySerializer
+from ..serializers import CompanySerializer, CompanyUpdateSerializer
 from ..views import check_access
 
 
-@api_view(["GET", "POST", "PUT", "DELETE"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def companies(request):
     if request.method == "GET":
@@ -34,27 +34,24 @@ def companies(request):
             {"detail": "you have no access to view users"},
             status=status.HTTP_403_FORBIDDEN,
         )
+    
+@api_view(["PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def company(request, id):
     if request.method == "PUT":
         if check_access(request.user, "companies", "u"):
-            if request.data.get("id"):
-                company = Company.objects.get(pk=request.data["id"])
-                company_serializer = CompanySerializer(
-                    instance=company, data=request.data
-                )
-                print(company_serializer.initial_data, company)
-                if company_serializer.is_valid():
-                    # company_serializer.update(instance=company)
-                    company_serializer.save()
-                    return Response(
-                        {"success": "company has been succesfully updated"},
-                        status=status.HTTP_200_OK,
-                    )
+            company = Company.objects.get(pk=id)
+            company_serializer = CompanyUpdateSerializer(
+                instance=company, data=request.data
+            )
+            if company_serializer.is_valid():
+                company_serializer.save()
                 return Response(
-                    company_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    {"success": "company has been succesfully updated"},
+                    status=status.HTTP_200_OK,
                 )
             return Response(
-                {"detail": "id is required to update company"},
-                status=status.HTTP_400_BAD_REQUEST,
+                company_serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
         return Response(
             {"detail": "you have no access to update companies"},
@@ -62,21 +59,10 @@ def companies(request):
         )
 
     if request.method == "DELETE":
-        if check_access(request.user, "companies", "d"):
-            if hasattr(request.data, "id"):
-                company = Company.objects.get(pk=request.data["id"])
-                company.delete()
-                return Response(
-                    {"success": "company has been succesfully deleted"},
-                    status=status.HTTP_200_OK,
-                )
-            return Response(
-                {"detail": "id is required to delete company"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        CompanySerializer.delete(id)
         return Response(
-            {"detail": "you have no access to delte company"},
-            status=status.HTTP_403_FORBIDDEN,
+            {"success": "company has been succesfully deleted"},
+            status=status.HTTP_200_OK,
         )
 
 

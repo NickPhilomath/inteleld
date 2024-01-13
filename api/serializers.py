@@ -18,6 +18,21 @@ class CompanySerializer(ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
+        
+    def delete(id):
+        company = Company.objects.get(pk=id)
+        company.delete()
+
+class CompanyUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Company
+        fields = "__all__"
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 
 ###### access
