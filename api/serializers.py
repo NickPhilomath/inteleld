@@ -13,21 +13,21 @@ from djoser.serializers import (
 from .models import User, Access, Company, Truck, Driver
 
 
-# company
+###### company
 class CompanySerializer(ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
 
 
-# access
+###### access
 class AccessSerializer(ModelSerializer):
     class Meta:
         model = Access
         fields = "__all__"
 
 
-# user
+###### user
 class UserCreateSerializer(BaseUserCreateSerializer):
     access = AccessSerializer()
 
@@ -53,9 +53,10 @@ class UserSerializer(BaseUserSerializer):
         exclude = ["password", "groups", "user_permissions", "is_staff", "company"]
 
 
-# driver
+###### driver
 class DriverUserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
+        model = User
         fields = [
             "first_name",
             "last_name",
@@ -65,7 +66,6 @@ class DriverUserSerializer(BaseUserSerializer):
             "is_active",
             "date_joined",
         ]
-        # exclude = ["password", "groups", "user_permissions", "is_staff", "company"]
 
 
 class DriverSerializer(ModelSerializer):
@@ -74,7 +74,47 @@ class DriverSerializer(ModelSerializer):
     class Meta:
         model = Driver
         fields = "__all__"
+
+    def delete(id):
+        driver = Driver.objects.get(pk=id)
+        user = User.objects.get(pk=driver.user_id)
+        driver.delete()
+        user.delete()
+
+
+class DriverUserUpdateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = None
+        exclude = ["company"]
+
+
+class DriverUpdateSerializer(ModelSerializer):
+    user = DriverUserUpdateSerializer()
+
+    class Meta:
+        model = Driver
+        fields = "__all__"
         # exclude = ["user.access"]
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user")
+        user_instance = User.objects.get(pk=instance.user_id)
+        # if requested data has password set, remove it
+        if user_data["password"]:
+            user_data.pop("password")
+
+        #  update driver object
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        #  update user object
+        for attr, value in user_data.items():
+            setattr(user_instance, attr, value)
+        user_instance.save()
+
+        return instance
 
 
 class DriverUserCreateSerializer(BaseUserCreateSerializer):
@@ -95,7 +135,6 @@ class DriverCreateSerializer(ModelSerializer):
         access = Access.objects.create(logs="vc")
         # <
         user_data = validated_data.pop("user")
-        print(user_data, validated_data)
         password = user_data.pop("password")
         user = User(access=access, **user_data)
         user.set_password(password)
@@ -104,7 +143,7 @@ class DriverCreateSerializer(ModelSerializer):
         return driver
 
 
-# truck
+###### truck
 class TrucksSerializer(ModelSerializer):
     # appuser = AppUserSerializer(read_only=True)
     class Meta:

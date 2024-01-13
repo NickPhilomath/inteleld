@@ -6,14 +6,14 @@ from ..models import Driver, User, Access
 from ..serializers import (
     DriverSerializer,
     DriverCreateSerializer,
-    UserCreateSerializer,
+    DriverUpdateSerializer,
     UserSerializer,
     AccessSerializer,
 )
 from ..views import check_access
 
 
-@api_view(["GET", "POST", "PUT", "DELETE"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def drivers(request):
     if request.method == "GET":
@@ -41,80 +41,43 @@ def drivers(request):
                 driver_serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-            # driver_data = request.data.get("driver")
-            # user_serializer = UserCreateSerializer(data=request.data)
-            # driver_serializer = DriverSerializer(data=driver_data)
-            # valid_user = user_serializer.is_valid()
-            # valid_driver = driver_serializer.is_valid()
-            # if valid_user and valid_driver:
-            #     # create access object for driver's user
-            #     access_serializer = AccessSerializer(
-            #         data={
-            #             "companies": "",
-            #             "users": "",
-            #             "drivers": "",
-            #             "trucks": "",
-            #             "logs": "vc",
-            #         }
-            #     )
-            #     if not access_serializer.is_valid():
-            #         print(access_serializer.errors)
-            #         return Response(
-            #             {
-            #                 "detail": "unexpected error happened while creating default access object for driver"
-            #             },
-            #             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            #         )
-            #     saved_access = access_serializer.save()
-            #     saved_user = user_serializer.save(access_id=saved_access.id)
-            #     driver_serializer.save(user_id=saved_user.id)
-            #     return Response(
-            #         {"success": "driver has been succesfully created"},
-            #         status=status.HTTP_201_CREATED,
-            #     )
-            # return Response(
-            #     user_serializer.errors | driver_serializer.errors,
-            #     status=status.HTTP_400_BAD_REQUEST,
-            # )
         return Response(
             {"detail": "you have no access to create a driver"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
+
+@api_view(["PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def driver(request, id):
     if request.method == "PUT":
         if check_access(request.user, "drivers", "u"):
-            if request.data.get("id"):
-                driver_data = request.data.get("driver")
-                driver = Driver.objects.get(pk=request.data["id"])
-                user = User.objects.get(pk=driver.user_id)
-                user_serializer = UserSerializer(instance=user, data=request.data)
-                driver_serializer = DriverSerializer(instance=driver, data=driver_data)
-                valid_user = user_serializer.is_valid()
-                valid_driver = driver_serializer.is_valid()
-                if valid_user and valid_driver:
-                    user_serializer.save()
-                    driver_serializer.save()
-                    return Response(
-                        {"success": "driver has been succesfully updated"},
-                        status=status.HTTP_200_OK,
-                    )
+            driver = Driver.objects.get(pk=id)
+            driver_serializer = DriverUpdateSerializer(
+                instance=driver, data=request.data
+            )
+            if driver_serializer.is_valid():
+                driver_serializer.save()
                 return Response(
-                    user_serializer.errors | driver_serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST,
+                    {"success": "driver has been succesfully updated"},
+                    status=status.HTTP_200_OK,
                 )
             return Response(
-                {"detail": "id is required to update driver"},
+                driver_serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         return Response(
             {"detail": "you have no access to update driver"},
             status=status.HTTP_403_FORBIDDEN,
         )
 
     if request.method == "DELETE":
-        pass
+        DriverSerializer.delete(id)
+
+        return Response(
+            {"success": "driver has been succesfully deleted"},
+            status=status.HTTP_200_OK,
+        )
 
 
 """
@@ -134,15 +97,15 @@ example driver data for testing
 update
 
     {
-        "id":1,
-        "username": "updated",
-        "role": "own",
-        "first_name": "fname",
-        "last_name": "lname",
-        "driver": {
-            "cdl_number": "v3423",
-            "cdl_state": "AK"
-         }
+        "cdl_number": "updated",
+        "cdl_state":"AK",
+        "user": {
+            "username": "updated",
+            "password":"!2344321",
+            "first_name": "fnffame",
+            "last_name": "lnffffame",
+            "email":"we@gmail.com"
+        }
     }
 
 """
