@@ -18,7 +18,7 @@ class CompanySerializer(ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
-        
+
     def delete(id):
         company = Company.objects.get(pk=id)
         company.delete()
@@ -164,6 +164,10 @@ class TrucksSerializer(ModelSerializer):
     class Meta:
         model = Truck
         fields = "__all__"
+
+    def delete(id):
+        truck = Truck.objects.get(pk=id)
+        truck.delete()
 
 
 class TrucksUpdateSerializer(ModelSerializer):
