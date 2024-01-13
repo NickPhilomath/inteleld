@@ -15,7 +15,7 @@ urlpatterns = [
     path("ping/", ping_pong),
     path("companies/", companies),
     path("drivers/", drivers),
-    path("driver/<int:id>", driver),
+    path("drivers/<int:id>", driver),
     path("logs/", logs),
     path("trucks/", trucks),
     path("users/", users),
