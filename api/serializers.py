@@ -23,6 +23,7 @@ class CompanySerializer(ModelSerializer):
         company = Company.objects.get(pk=id)
         company.delete()
 
+
 class CompanyUpdateSerializer(ModelSerializer):
     class Meta:
         model = Company
@@ -43,8 +44,18 @@ class AccessSerializer(ModelSerializer):
 
 
 ###### user
-class UserCreateSerializer(BaseUserCreateSerializer):
+class UserSerializer(BaseUserSerializer):
     access = AccessSerializer()
+
+    # appuser = AppUserSerializer(read_only=True)
+    class Meta(BaseUserSerializer.Meta):
+        model = User
+        fields = None
+        exclude = ["password", "groups", "user_permissions", "is_staff", "company"]
+
+
+class UserCreateSerializer(BaseUserCreateSerializer):
+    access = AccessSerializer
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
@@ -58,14 +69,11 @@ class UserCreateSerializer(BaseUserCreateSerializer):
     #     return make_password(value)
 
 
-class UserSerializer(BaseUserSerializer):
-    access = AccessSerializer()
-
-    # appuser = AppUserSerializer(read_only=True)
-    class Meta(BaseUserSerializer.Meta):
+class UserUpdateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = None
-        exclude = ["password", "groups", "user_permissions", "is_staff", "company"]
+        exclude = ["access"]
 
 
 ###### driver
