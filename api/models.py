@@ -56,7 +56,9 @@ class Driver(models.Model):
     phone = models.CharField(max_length=13, null=True)
     address = models.CharField(max_length=127, null=True)
     app_version = models.CharField(max_length=5, null=True)
-    notes = models.CharField(max_length=255, null=True)
+    allow_pc = models.BooleanField(default=False)
+    allow_ym = models.BooleanField(default=False)
+    notes = models.CharField(max_length=255, blank=True)
     is_active = models.BooleanField(default=True)
 
 

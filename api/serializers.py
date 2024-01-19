@@ -77,17 +77,15 @@ class UserUpdateSerializer(BaseUserCreateSerializer):
 
 
 ###### driver
+# view single
 class DriverUserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = User
         fields = [
             "first_name",
             "last_name",
-            "last_login",
             "username",
             "email",
-            "is_active",
-            "date_joined",
         ]
 
 
@@ -96,7 +94,23 @@ class DriverSerializer(ModelSerializer):
 
     class Meta:
         model = Driver
-        fields = "__all__"
+        fields = [
+            "user",
+            "truck",
+            "phone",
+            "address",
+            "cdl_number",
+            "cdl_state",
+            "co_driver",
+            "allow_pc",
+            "allow_ym",
+            "notes",
+        ]
+
+    def deactivate(id):
+        driver = Driver.objects.get(pk=id)
+        driver.is_active = False
+        driver.save()
 
     def delete(id):
         driver = Driver.objects.get(pk=id)
@@ -105,6 +119,73 @@ class DriverSerializer(ModelSerializer):
         user.delete()
 
 
+# view all
+class DriversUserSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "date_joined",
+        ]
+
+
+class DriversSerializer(ModelSerializer):
+    user = DriversUserSerializer()
+
+    class Meta:
+        model = Driver
+        fields = ["id", "user", "co_driver", "truck", "app_version"]
+
+
+# create
+class DriverUserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = [
+            "company",
+            "first_name",
+            "last_name",
+            "username",
+            # "date_joined",
+            "email",
+            "password",
+        ]
+
+
+class DriverCreateSerializer(ModelSerializer):
+    user = DriverUserCreateSerializer()
+
+    class Meta:
+        model = Driver
+        fields = [
+            "user",
+            "truck",
+            "phone",
+            "address",
+            "cdl_number",
+            "cdl_state",
+            "co_driver",
+            "allow_pc",
+            "allow_ym",
+            "notes",
+        ]
+
+    def create(self, validated_data):
+        # default access object for driver
+        access = Access.objects.create(logs="vc")
+        # <
+        user_data = validated_data.pop("user")
+        password = user_data.pop("password")
+        user = User(access=access, **user_data)
+        user.set_password(password)
+        user.save()
+        driver = Driver.objects.create(user=user, **validated_data)
+        return driver
+
+
+# update
 class DriverUserUpdateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
@@ -138,32 +219,6 @@ class DriverUpdateSerializer(ModelSerializer):
         user_instance.save()
 
         return instance
-
-
-class DriverUserCreateSerializer(BaseUserCreateSerializer):
-    class Meta(BaseUserCreateSerializer.Meta):
-        model = User
-        fields = "__all__"
-
-
-class DriverCreateSerializer(ModelSerializer):
-    user = DriverUserCreateSerializer()
-
-    class Meta:
-        model = Driver
-        fields = "__all__"
-
-    def create(self, validated_data):
-        # default access object for driver
-        access = Access.objects.create(logs="vc")
-        # <
-        user_data = validated_data.pop("user")
-        password = user_data.pop("password")
-        user = User(access=access, **user_data)
-        user.set_password(password)
-        user.save()
-        driver = Driver.objects.create(user=user, **validated_data)
-        return driver
 
 
 ###### truck

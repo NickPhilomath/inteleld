@@ -5,10 +5,13 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import Driver
 from ..serializers import (
     DriverSerializer,
+    DriversSerializer,
     DriverCreateSerializer,
     DriverUpdateSerializer,
 )
 from ..views import check_access
+
+import time
 
 
 @api_view(["GET", "POST"])
@@ -16,8 +19,10 @@ from ..views import check_access
 def drivers(request):
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
-            drivers = Driver.objects.filter(user__company_id=request.user.company_id)
-            driver_serializer = DriverSerializer(drivers, many=True)
+            drivers = Driver.objects.filter(
+                user__company_id=request.user.company_id, is_active=True
+            )
+            driver_serializer = DriversSerializer(drivers, many=True)
             return Response({"data": driver_serializer.data}, status=status.HTTP_200_OK)
         return Response(
             {"detail": "you have no access to view drivers"},
@@ -45,9 +50,20 @@ def drivers(request):
         )
 
 
-@api_view(["PUT", "DELETE"])
+@api_view(["GET", "PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 def driver(request, id):
+    time.sleep(3)
+    if request.method == "GET":
+        if check_access(request.user, "drivers", "v"):
+            driver = Driver.objects.get(pk=id)
+            driver_serializer = DriverSerializer(driver)
+            return Response(driver_serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "you have no access to view drivers"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
     if request.method == "PUT":
         if check_access(request.user, "drivers", "u"):
             driver = Driver.objects.get(pk=id)
@@ -70,10 +86,27 @@ def driver(request, id):
         )
 
     if request.method == "DELETE":
+        return Response(
+            {"success": "this method is disabled by the server"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
         DriverSerializer.delete(id)
 
         return Response(
             {"success": "driver has been succesfully deleted"},
+            status=status.HTTP_200_OK,
+        )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def driver_deactivate(request, id):
+    if request.method == "POST":
+        DriverSerializer.deactivate(id)
+
+        return Response(
+            {"success": "driver has been succesfully deactivated"},
             status=status.HTTP_200_OK,
         )
 
@@ -84,7 +117,7 @@ example driver data for testing
         "cdl_number": "v342eas3",
         "cdl_state":"AK",
         "user": {
-            "username": "testfuck",
+            "username": "test",
             "password":"!2344321",
             "first_name": "fnffame",
             "last_name": "lnffffame",
