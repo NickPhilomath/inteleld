@@ -53,7 +53,7 @@ def drivers(request):
 @api_view(["GET", "PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 def driver(request, id):
-    time.sleep(3)
+    time.sleep(1)
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
             driver = Driver.objects.get(pk=id)

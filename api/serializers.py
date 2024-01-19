@@ -189,8 +189,12 @@ class DriverCreateSerializer(ModelSerializer):
 class DriverUserUpdateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
-        fields = None
-        exclude = ["company"]
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+        ]
 
 
 class DriverUpdateSerializer(ModelSerializer):
@@ -198,7 +202,18 @@ class DriverUpdateSerializer(ModelSerializer):
 
     class Meta:
         model = Driver
-        fields = "__all__"
+        fields = [
+            "user",
+            "truck",
+            "phone",
+            "address",
+            "cdl_number",
+            "cdl_state",
+            "co_driver",
+            "allow_pc",
+            "allow_ym",
+            "notes",
+        ]
         # exclude = ["user.access"]
 
     def update(self, instance, validated_data):
