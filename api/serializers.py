@@ -186,13 +186,13 @@ class DriverCreateSerializer(ModelSerializer):
 
 
 # update
-class DriverUserUpdateSerializer(BaseUserCreateSerializer):
-    class Meta(BaseUserCreateSerializer.Meta):
+class DriverUserUpdateSerializer(ModelSerializer):
+    class Meta():
         model = User
         fields = [
             "first_name",
             "last_name",
-            "username",
+            # "username",
             "email",
         ]
 
@@ -219,9 +219,9 @@ class DriverUpdateSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         user_data = validated_data.pop("user")
         user_instance = User.objects.get(pk=instance.user_id)
-        # if requested data has password set, remove it
-        if user_data["password"]:
-            user_data.pop("password")
+        # # if requested data has password set, remove it
+        # if user_data["password"]:
+        #     user_data.pop("password")
 
         #  update driver object
         for attr, value in validated_data.items():

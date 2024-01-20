@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -31,7 +32,8 @@ def drivers(request):
 
     if request.method == "POST":
         if check_access(request.user, "drivers", "c"):
-            request.data["user"]["company"] = request.user.company_id
+            if request.data.get('user'):
+                request.data["user"]["company"] = request.user.company_id
 
             driver_serializer = DriverCreateSerializer(data=request.data)
             if driver_serializer.is_valid():
@@ -56,7 +58,8 @@ def driver(request, id):
     time.sleep(1)
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
-            driver = Driver.objects.get(pk=id)
+            driver = get_object_or_404(Driver, pk=id)
+            # driver = Driver.objects.get(pk=id)
             driver_serializer = DriverSerializer(driver)
             return Response(driver_serializer.data, status=status.HTTP_200_OK)
         return Response(
@@ -66,7 +69,7 @@ def driver(request, id):
 
     if request.method == "PUT":
         if check_access(request.user, "drivers", "u"):
-            driver = Driver.objects.get(pk=id)
+            driver = get_object_or_404(Driver, pk=id)
             driver_serializer = DriverUpdateSerializer(
                 instance=driver, data=request.data
             )
@@ -87,7 +90,7 @@ def driver(request, id):
 
     if request.method == "DELETE":
         return Response(
-            {"success": "this method is disabled by the server"},
+            {"success": "this method is disabled by developers"},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
