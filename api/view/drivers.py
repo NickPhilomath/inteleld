@@ -20,7 +20,7 @@ import time
 def drivers(request):
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
-            drivers = Driver.objects.filter(
+            drivers = Driver.objects.select_related('user').filter(
                 user__company_id=request.user.company_id, is_active=True
             )
             driver_serializer = DriversSerializer(drivers, many=True)

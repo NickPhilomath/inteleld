@@ -120,8 +120,8 @@ class DriverSerializer(ModelSerializer):
 
 
 # view all
-class DriversUserSerializer(BaseUserSerializer):
-    class Meta(BaseUserSerializer.Meta):
+class DriversUserSerializer(ModelSerializer):
+    class Meta:
         model = User
         fields = [
             "first_name",
@@ -187,7 +187,7 @@ class DriverCreateSerializer(ModelSerializer):
 
 # update
 class DriverUserUpdateSerializer(ModelSerializer):
-    class Meta():
+    class Meta:
         model = User
         fields = [
             "first_name",

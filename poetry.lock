@@ -434,6 +434,21 @@ asgiref = ">=3.6"
 Django = ">=3.2"
 
 [[package]]
+name = "django-debug-toolbar"
+version = "4.2.0"
+description = "A configurable set of panels that display various debug information about the current request/response."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_debug_toolbar-4.2.0-py3-none-any.whl", hash = "sha256:af99128c06e8e794479e65ab62cc6c7d1e74e1c19beb44dcbf9bad7a9c017327"},
+    {file = "django_debug_toolbar-4.2.0.tar.gz", hash = "sha256:bc7fdaafafcdedefcc67a4a5ad9dac96efd6e41db15bc74d402a54a2ba4854dc"},
+]
+
+[package.dependencies]
+django = ">=3.2.4"
+sqlparse = ">=0.2"
+
+[[package]]
 name = "django-redis"
 version = "5.4.0"
 description = "Full featured redis cache backend for Django."
@@ -1148,4 +1163,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "174babd0e58c06022a66eecb84b4062c65d8f2f63f98e747dc620fd8f2cbef62"
+content-hash = "03292dcefa3b652a09bb6ed835475f0ddec0a400165ee9859deb5ae953143556"
