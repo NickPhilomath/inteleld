@@ -20,7 +20,7 @@ import time
 def drivers(request):
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
-            drivers = Driver.objects.select_related('user').filter(
+            drivers = Driver.objects.select_related("user").filter(
                 user__company_id=request.user.company_id, is_active=True
             )
             driver_serializer = DriversSerializer(drivers, many=True)
@@ -32,7 +32,7 @@ def drivers(request):
 
     if request.method == "POST":
         if check_access(request.user, "drivers", "c"):
-            if request.data.get('user'):
+            if request.data.get("user"):
                 request.data["user"]["company"] = request.user.company_id
 
             driver_serializer = DriverCreateSerializer(data=request.data)
@@ -55,7 +55,6 @@ def drivers(request):
 @api_view(["GET", "PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 def driver(request, id):
-    time.sleep(1)
     if request.method == "GET":
         if check_access(request.user, "drivers", "v"):
             driver = get_object_or_404(Driver, pk=id)
