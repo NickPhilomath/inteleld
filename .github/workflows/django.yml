@@ -11,18 +11,20 @@ jobs:
 
     # runs-on: ubuntu-22.04
     runs-on: self-hosted
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.7, 3.8, 3.9]
+    # strategy:
+    #   max-parallel: 4
+    #   matrix:
+    #     python-version: [3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        sudo docker build . --file Dockerfile --tag inteleld:$(date +%s)
+        docker-compose up -d
 
-    # docker-compose up -d
+    # sudo docker build . --file Dockerfile --tag inteleld:$(date +%s)
+    # sudo docker build  --tag inteleld .
+    # run: sudo docker run -p 8000:8000 -d inteleld
     # steps:
     # - uses: actions/checkout@v4
     # - name: Set up Python ${{ matrix.python-version }}
