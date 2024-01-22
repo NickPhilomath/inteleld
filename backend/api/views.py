@@ -27,6 +27,12 @@ def check_access(user, source: str, type):
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
+def api(request):
+    return Response("hello world", status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def ping_pong(request):
     # update_trucks()
     return Response("pong", status=status.HTTP_200_OK)

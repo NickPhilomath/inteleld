@@ -1,7 +1,8 @@
+import os
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -116,17 +117,23 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Database
 DATABASES = {
-    "default": {
-        # default
-        # "ENGINE": "django.db.backends.sqlite3",
-        # "NAME": BASE_DIR / "db.sqlite3",
-        # mysql
-        "ENGINE": "django.db.backends.mysql",
-        "HOST": "localhost",
-        "NAME": MYSQL_DATABASE_NAME,
-        "USER": MYSQL_USER,
-        "PASSWORD": MYSQL_PASSWORD,
-    }
+    # "default": {
+    #     # default
+    #     # "ENGINE": "django.db.backends.sqlite3",
+    #     # "NAME": BASE_DIR / "db.sqlite3",
+    #     # mysql
+    #     "ENGINE": "django.db.backends.mysql",
+    #     "HOST": "localhost",
+    #     "NAME": MYSQL_DATABASE_NAME,
+    #     "USER": MYSQL_USER,
+    #     "PASSWORD": MYSQL_PASSWORD,
+    # }
+    "default": dj_database_url.config(
+        # mysql://USER:PASSWORD@HOST:PORT/NAME
+        default="mysql://root:MyPassword@db/inteleld_db",
+        conn_max_age=600,
+        # conn_health_checks=True,
+    )
 }
 
 
