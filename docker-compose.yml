@@ -1,17 +1,23 @@
-version: "3.9"
+version: "3.8"
+
 services:
+  web:
+    depends_on:
+      - api
+    build: ./frontend
+    ports:
+      - 3000:3000
+
   api:
-    build: .
-    command: ./wait-for-it.sh mysql:3306 -- ./docker-entrypoint.sh
+    depends_on:
+      - db
+    build: ./backend
     ports:
       - 8000:8000
-    depends_on:
-      # - redis
-      - mysql
     restart: on-failure
-    volumes:
-      - .:/app
-  mysql:
+    command: ./docker-entrypoint.sh
+
+  db:
     image: mysql:8.0
     ports:
       - 3306:3306
@@ -21,6 +27,10 @@ services:
       - MYSQL_ROOT_PASSWORD=MyPassword
     volumes:
       - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:
+
   # redis:
   #   image: redis:6.2-alpine
   #   ports:
@@ -70,7 +80,7 @@ services:
   #   tty: true
   #   volumes:
   #     - .:/app
-volumes:
-  mysqldata:
-  # pgdata:
-  # redisdata:
+# volumes:
+#   mysqldata:
+# pgdata:
+# redisdata:

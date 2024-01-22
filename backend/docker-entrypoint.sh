@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Waiting for MySQL to start..."
+./wait-for-it.sh db:3306
+
 # Apply database migrations
 echo "Apply database migrations"
 poetry run python manage.py migrate
