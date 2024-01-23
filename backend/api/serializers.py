@@ -139,6 +139,21 @@ class DriversSerializer(ModelSerializer):
         fields = ["id", "user", "co_driver", "truck", "app_version"]
 
 
+# view for logs
+class DriversUserLogsSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name"]
+
+
+class DriversLogsSerializer(ModelSerializer):
+    user = DriversUserLogsSerializer()
+
+    class Meta:
+        model = Driver
+        fields = ["id", "user", "truck"]
+
+
 # create
 class DriverUserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):

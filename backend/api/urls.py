@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import ping_pong
 from .view.companies import companies, company
 from .view.drivers import drivers, driver, driver_deactivate
-from .view.logs import driver_logs
+from .view.logs import drivers_logs, driver_logs
 from .view.trucks import trucks, truck
 from .view.users import users, user
 
@@ -15,10 +15,13 @@ urlpatterns = [
     path("ping/", ping_pong),
     path("companies/", companies),
     path("companies/<int:id>", company),
+    #
     path("drivers/", drivers),
+    path("drivers/logs", drivers_logs),
     path("drivers/<int:id>", driver),
     path("drivers/<int:id>/logs", driver_logs),
     path("drivers/deactivate/<int:id>", driver_deactivate),
+    #
     path("trucks/", trucks),
     path("trucks/<int:id>", truck),
     path("users/", users),

@@ -1,6 +1,6 @@
 # ELD service for logistic companies
 
-full functional eld + other services
+fully functional eld + other services
 
 ## Setting up
 

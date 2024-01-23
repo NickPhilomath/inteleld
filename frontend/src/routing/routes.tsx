@@ -4,8 +4,9 @@ import Home from "../components/Home";
 import Login from "../components/Login";
 import Logout from "../components/Logout";
 import Map from "../components/Map";
-import Logs from "../components/Logs";
 import Drivers from "../components/Drivers/Drivers";
+import DriverLogs from "../components/DriverLogs/DriverLogs";
+import DriverLog from "../components/DriverLogs/DriverLog";
 import Trucks from "../components/Trucks/Trucks";
 import PageNotFound from "../components/PageNotFound";
 
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "map", element: <Map /> },
-      { path: "logs", element: <Logs /> },
+      { path: "logs", element: <DriverLogs /> },
+      { path: "logs/driver/:id", element: <DriverLog /> },
       { path: "drivers", element: <Drivers /> },
       { path: "trucks", element: <Trucks /> },
     ],

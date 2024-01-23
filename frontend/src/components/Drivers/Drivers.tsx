@@ -149,18 +149,14 @@ const Drivers = () => {
                   <Td>{driver.user.username}</Td>
                   <Td>{driver.co_driver}</Td>
                   <Td>
-                    {driver.truck ? (
-                      driver.truck
-                    ) : (
+                    {driver.truck || (
                       <Msg level="error" bold>
                         not assigned
                       </Msg>
                     )}
                   </Td>
                   <Td>
-                    {driver.app_version ? (
-                      driver.app_version
-                    ) : (
+                    {driver.app_version || (
                       <Msg level="warn" bold>
                         no data
                       </Msg>

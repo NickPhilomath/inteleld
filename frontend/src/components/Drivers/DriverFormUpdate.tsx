@@ -62,7 +62,7 @@ const DriverFromUpdate = ({
     error,
     isLoading: initLoading,
     refetch,
-  } = useEntity({
+  } = useEntity<FormData>({
     id: driverID,
     keys: ["driver", driverID],
     url: "/drivers",

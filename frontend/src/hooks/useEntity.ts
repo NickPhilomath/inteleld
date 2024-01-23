@@ -10,7 +10,7 @@ interface Props {
     staleTime?: number | undefined;
 }
 
-const useEntity = <T>({id, keys, url, staleTime} : Props) => {
+const useEntity = <T>({ id, keys, url, staleTime } : Props) => {
     const fetchEntity = () =>
         apiClient.get<T>(url + "/" + id, {headers: getHeaders()}).then((res) => { console.log("data**entity", res.data); return res.data});
 

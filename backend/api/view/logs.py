@@ -3,11 +3,23 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import Log
+from ..models import Log, Driver
 from ..views import check_access
-from ..serializers import (
-    LogsSerializer,
-)
+from ..serializers import DriversLogsSerializer, LogsSerializer
+
+
+@api_view(["GET"])
+def drivers_logs(request):
+    if check_access(request.user, "logs", "v"):
+        drivers = Driver.objects.select_related("user").filter(
+            user__company_id=request.user.company_id, is_active=True
+        )
+        driver_serializer = DriversLogsSerializer(drivers, many=True)
+        return Response({"data": driver_serializer.data}, status=status.HTTP_200_OK)
+    return Response(
+        {"detail": "you have no access to view driver logs"},
+        status=status.HTTP_403_FORBIDDEN,
+    )
 
 
 @api_view(["GET", "POST", "PUT", "DELETE"])
