@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import Layout from "../components/Layout";
 import Home from "../components/Home";
 import Login from "../components/Login";
@@ -10,7 +10,7 @@ import DriverLog from "../components/DriverLogs/DriverLog";
 import Trucks from "../components/Trucks/Trucks";
 import PageNotFound from "../components/PageNotFound";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   { path: "/login", element: <Login /> },
   { path: "/logout", element: <Logout /> },
   {
