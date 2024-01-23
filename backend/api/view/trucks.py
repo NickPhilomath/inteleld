@@ -45,18 +45,14 @@ def truck(request, id):
     if request.method == "PUT":
         if check_access(request.user, "trucks", "u"):
             truck = Truck.objects.get(pk=id)
-            truck_serializer = TrucksUpdateSerializer(
-                instance=truck, data=request.data
-            )
+            truck_serializer = TrucksUpdateSerializer(instance=truck, data=request.data)
             if truck_serializer.is_valid():
                 truck_serializer.save()
                 return Response(
                     {"success": "truck has been succesfully updated"},
                     status=status.HTTP_200_OK,
                 )
-            return Response(
-                truck_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(truck_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(
             {"detail": "you have no access to update trucks"},
             status=status.HTTP_403_FORBIDDEN,
@@ -73,8 +69,6 @@ def truck(request, id):
 """
 example truck data for posting
     {
-        "id": "1",
-        "company": "1",
         "unit_number": "11111",
         "make": "abcd",
         "model": "defg"

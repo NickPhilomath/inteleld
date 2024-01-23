@@ -10,7 +10,7 @@ from djoser.serializers import (
     UserSerializer as BaseUserSerializer,
     UserCreateSerializer as BaseUserCreateSerializer,
 )
-from .models import User, Access, Company, Truck, Driver
+from .models import User, Access, Company, Truck, Driver, Log, Location
 
 
 ###### company
@@ -266,3 +266,30 @@ class TrucksUpdateSerializer(ModelSerializer):
         #     "notes",
         #     "is_active",
         # ]
+
+
+###### truck
+# view all
+class LogLocationSerializer(ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["address", "latitude", "longitude"]
+
+
+class LogsSerializer(ModelSerializer):
+    location = LogLocationSerializer()
+
+    class Meta:
+        model = Log
+        fields = [
+            "driver",
+            "location",
+            "truck",
+            "status",
+            "datetime",
+            "odometer",
+            "eng_hours",
+            "notes",
+            "document",
+            "trailer",
+        ]

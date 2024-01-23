@@ -4,15 +4,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from ..models import Driver
+from ..views import check_access
 from ..serializers import (
     DriverSerializer,
     DriversSerializer,
     DriverCreateSerializer,
     DriverUpdateSerializer,
 )
-from ..views import check_access
-
-import time
 
 
 @api_view(["GET", "POST"])

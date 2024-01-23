@@ -41,12 +41,6 @@ class User(AbstractUser):
     role = models.CharField(max_length=3, null=True, choices=USER_ROLES)
 
 
-class Location(models.Model):
-    adress = models.CharField(max_length=255)
-    latitude = models.DecimalField(max_digits=11, decimal_places=8)
-    longitude = models.DecimalField(max_digits=11, decimal_places=8)
-
-
 class Driver(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     truck = models.ForeignKey("Truck", null=True, on_delete=models.SET_NULL)
@@ -77,16 +71,22 @@ class Truck(models.Model):
     is_active = models.BooleanField(default=True)
 
 
+class Location(models.Model):
+    truck = models.ForeignKey(Truck, on_delete=models.SET_NULL, null=True)
+    address = models.CharField(max_length=64, blank=True)
+    latitude = models.DecimalField(max_digits=12, decimal_places=9)
+    longitude = models.DecimalField(max_digits=12, decimal_places=9)
+    is_active = models.BooleanField(default=True)
+
+
 class Log(models.Model):
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     truck = models.ForeignKey(Truck, on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     status = models.CharField(
-        max_length=3, choices=LOG_STATUS, default=DEFAULT_LOG_STATUS
+        max_length=2, choices=LOG_STATUS, default=DEFAULT_LOG_STATUS
     )
     datetime = models.DateTimeField()
-    location = models.CharField(max_length=50, null=True)
-    lat = models.DecimalField(max_digits=12, decimal_places=9, null=True)
-    lng = models.DecimalField(max_digits=12, decimal_places=9, null=True)
     odometer = models.IntegerField(null=True)
     eng_hours = models.DecimalField(max_digits=6, decimal_places=1, null=True)
     notes = models.CharField(max_length=20, null=True)
