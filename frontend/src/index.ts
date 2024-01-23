@@ -14,8 +14,12 @@ export interface Location {
   
 export interface Truck {
     id: number;
-    name: string;
-    location: Location;
+    unit_number: string;
+    make: string;
+    model: string;
+    eld_device: string;
+    notes: string;
+    vin_number: string;
 }
 
 export interface User {
