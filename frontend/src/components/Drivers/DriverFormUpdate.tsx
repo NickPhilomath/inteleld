@@ -20,12 +20,11 @@ import { useEffect } from "react";
 import { STATES } from "../..";
 import useRequest from "../../hooks/useRequest";
 import { getHeaders } from "../../hooks/useData";
-import useDriver from "../../hooks/useDriver";
+import useEntity from "../../hooks/useEntity";
 import { getErrorMsg } from "../../util";
 import SpinnerButton from "../common/SpinnerButton";
 import FormInput from "../common/FormInput";
 import FormSelect from "../common/FormSelect";
-
 
 export const schema = z.object({
   // truck: z.number({ invalid_type_error: "Truck is required" }).positive(),
@@ -58,7 +57,17 @@ const DriverFromUpdate = ({
   handleRefetch,
   driverID,
 }: Props) => {
-  const { data: driver, error, isLoading: initLoading, refetch } = useDriver(driverID);
+  const {
+    data: driver,
+    error,
+    isLoading: initLoading,
+    refetch,
+  } = useEntity({
+    id: driverID,
+    keys: ["driver", driverID],
+    url: "/drivers",
+    staleTime: 3 * 60 * 1000,
+  });
 
   const { put, isLoading, errorMsg, resErros } = useRequest<FormData>(
     "/drivers/" + driverID,

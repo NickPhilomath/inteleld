@@ -17,12 +17,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { getDateString } from "../../util";
+import useEntities from "../../hooks/useEntities";
 import Spinner from "../common/Spinner";
-import DriverForm from "./DriverForm";
-import useDrivers from "../../hooks/useDrivers";
 import Msg from "../common/Msg";
+import DriverForm from "./DriverForm";
 import DriverFromUpdate from "./DriverFormUpdate";
 import DriverDeactivate from "./DriverDeactivate";
+import { Driver } from "../..";
 
 const CFaPen = chakra(FaPen);
 const CFaTrash = chakra(FaTrash);
@@ -30,11 +31,20 @@ const CFaTrash = chakra(FaTrash);
 const Drivers = () => {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: drivers, error, isLoading, refetch } = useDrivers();
   const [initDriverId, setInitDriverId] = useState<number | undefined>();
   const [formState, setFormState] = useState<
     "create" | "update" | "deactivate"
   >("create");
+  const {
+    data: drivers,
+    error,
+    isLoading,
+    refetch,
+  } = useEntities<Driver>({
+    keys: ["drivers"],
+    url: "/drivers",
+    staleTime: 3 * 60 * 1000,
+  });
 
   useEffect(() => {
     // this shit it causing to force user to login twice

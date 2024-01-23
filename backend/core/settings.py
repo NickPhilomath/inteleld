@@ -34,6 +34,7 @@ def get_list(text):
 #         return value
 #     return None
 
+
 # setting up some constants
 DEBUG = True
 # ALLOWED_HOSTS = ["localhost"]
