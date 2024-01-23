@@ -1,6 +1,6 @@
-# Weather alerting system for logistic companies
+# ELD service for logistic companies
 
-This program allow the company to monitor their truck in order to be aware of high wind speed and other possible natural causes
+full functional eld + other services
 
 ## Setting up
 
@@ -24,13 +24,3 @@ This program allow the company to monitor their truck in order to be aware of hi
   or
   `from core.celery import app`
   `app.control.purge()`
-
-## Todo
-
-- Test the Open Weather Map api and set up for development (DONE)
-- Test the Samsara api and set up for development (DONE)
-- Crate models for truck (DONE)
-- Set up background worker - Celery (DONE)
-- Set up MySQL (ERROR)
-- Code scripts to easily set up and run the app
-- Dockerize the app using Docker
