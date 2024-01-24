@@ -1,18 +1,15 @@
 version: "3.8"
 
 services:
-  web:
-    depends_on:
-      - api
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-    ports:
-      - 80:80
+  # web:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.prod
 
   api:
     depends_on:
       - db
+      # - web
     build: ./backend
     ports:
       - 8000:8000
