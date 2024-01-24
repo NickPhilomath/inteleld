@@ -20,7 +20,7 @@ import useEntities from "../../hooks/useEntities";
 import Spinner from "../common/Spinner";
 import TruckForm from "./TruckForm";
 import TruckFormUpdate from "./TruckFormUpdate";
-//import DriverDeactivate from "./DriverDeactivate";
+import TruckDeactivate from "./TruckDeactivate";
 import { Truck } from "../..";
 
 const CFaPen = chakra(FaPen);
@@ -105,14 +105,14 @@ const Trucks = () => {
         />
       )}
 
-      {/* {formState === "deactivate" && (
-        <DriverDeactivate
+      {formState === "deactivate" && (
+        <TruckDeactivate
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
-          driverID={initTruckId}
+          truckID={initTruckId}
         />
-      )} */}
+      )}
 
       {isLoading && <Spinner />}
 

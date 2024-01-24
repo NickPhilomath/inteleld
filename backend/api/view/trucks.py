@@ -13,7 +13,7 @@ from ..views import check_access
 def trucks(request):
     if request.method == "GET":
         if check_access(request.user, "trucks", "v"):
-            trucks = Truck.objects.filter(company_id=request.user.company_id)
+            trucks = Truck.objects.filter(company_id=request.user.company_id, is_active=True)
             serializer = TrucksSerializer(trucks, many=True)
             return Response({"data": serializer.data}, status=status.HTTP_200_OK)
         return Response(
@@ -83,7 +83,7 @@ def truck(request, id):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def driver_deactivate(request, id):
+def truck_deactivate(request, id):
     if request.method == "POST":
         TruckSerializer.deactivate(id)
 
