@@ -252,38 +252,84 @@ class DriverUpdateSerializer(ModelSerializer):
 
 
 ###### truck
-class TrucksSerializer(ModelSerializer):
-    # appuser = AppUserSerializer(read_only=True)
+    
+class TruckSerializer(ModelSerializer):
     class Meta:
         model = Truck
-        fields = "__all__"
+        fields = [
+            "unit_number",
+            "make",
+            "model",
+            "year",
+            "fuel_type",
+            "license_number",
+            "license_state",
+            "vin_number",
+            "notes",
+        ]
 
+    def deactivate(id):
+        driver = Truck.objects.get(pk=id)
+        driver.is_active = False
+        driver.save()
+    
     def delete(id):
         truck = Truck.objects.get(pk=id)
         truck.delete()
 
 
-class TrucksUpdateSerializer(ModelSerializer):
+class TrucksSerializer(ModelSerializer):
     # appuser = AppUserSerializer(read_only=True)
     class Meta:
         model = Truck
-        exclude = ["company"]
-        # fields = [
-        #     "unit_number",
-        #     "make",
-        #     "model",
-        #     "year",
-        #     "license_state",
-        #     "license_number",
-        #     "vin_number",
-        #     "fuel_type",
-        #     "eld_device",
-        #     "notes",
-        #     "is_active",
-        # ]
+        fields = [
+            "unit_number",
+            "make",
+            "model",
+            "eld_device",
+            "notes",
+            "vin_number",
+        ]
 
 
-###### truck
+class TrucksUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Truck
+        fields = [
+            "unit_number",
+            "make",
+            "model",
+            "year",
+            "fuel_type",
+            "license_number",
+            "license_state",
+            "vin_number",
+            "notes",
+        ]
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        return instance
+
+class TruckCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Truck
+        fields = [
+            "company",
+            "unit_number",
+            "make",
+            "model",
+            "year",
+            "fuel_type",
+            "license_number",
+            "license_state",
+            "vin_number",
+            "notes",
+        ]
+
 # view all
 class LogLocationSerializer(ModelSerializer):
     class Meta:
