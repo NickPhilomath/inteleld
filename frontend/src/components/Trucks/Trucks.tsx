@@ -16,11 +16,9 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPen, FaTrash } from "react-icons/fa";
-import { getDateString } from "../../util";
 import useEntities from "../../hooks/useEntities";
 import Spinner from "../common/Spinner";
-import Msg from "../common/Msg";
-//import DriverForm from "./DriverForm";
+import TruckForm from "./TruckForm";
 //import DriverFromUpdate from "./DriverFormUpdate";
 //import DriverDeactivate from "./DriverDeactivate";
 import { Truck } from "../..";
@@ -31,7 +29,7 @@ const CFaTrash = chakra(FaTrash);
 const Trucks = () => {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [initDriverId, setInitDriverId] = useState<number | undefined>();
+  const [initTruckId, setInitTruckId] = useState<number | undefined>();
   const [formState, setFormState] = useState<
     "create" | "update" | "deactivate"
   >("create");
@@ -61,14 +59,14 @@ const Trucks = () => {
     refetch();
   };
 
-  const handleEditDriver = (id: number) => {
-    setInitDriverId(id);
+  const handleEditTruck = (id: number) => {
+    setInitTruckId(id);
     setFormState("update");
     onOpen();
   };
 
-  const handleDeactivateDriver = (id: number) => {
-    setInitDriverId(id);
+  const handleDeactivateTruck = (id: number) => {
+    setInitTruckId(id);
     setFormState("deactivate");
     onOpen();
   };
@@ -81,29 +79,29 @@ const Trucks = () => {
           size="md"
           colorScheme="blue"
           onClick={() => {
-            setInitDriverId(undefined);
+            setInitTruckId(undefined);
             setFormState("create");
             onOpen();
           }}
         >
-          Add driver
+          Add truck
         </Button>
       </HStack>
 
-      {/* {formState === "create" && (
-        <DriverForm
+      {formState === "create" && (
+        <TruckForm
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
         />
       )}
 
-      {formState === "update" && (
+      {/* {formState === "update" && (
         <DriverFromUpdate
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
-          driverID={initDriverId}
+          driverID={initTruckId}
         />
       )}
 
@@ -112,7 +110,7 @@ const Trucks = () => {
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
-          driverID={initDriverId}
+          driverID={initTruckId}
         />
       )} */}
 
@@ -129,13 +127,13 @@ const Trucks = () => {
           <Thead>
             <Tr>
               <Th isNumeric>#</Th>
-              <Th>unit number</Th>
-              <Th>driver name</Th>
-              <Th>make / model</Th>
+              <Th>Unit Number</Th>
+              <Th>Driver Name</Th>
+              <Th>Make / Model</Th>
               <Th>ELD</Th>
-              <Th>notes</Th>
-              <Th>vin number</Th>
-              <Th>actions</Th>
+              <Th>Notes</Th>
+              <Th>Vin Number</Th>
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -157,7 +155,7 @@ const Trucks = () => {
                         color="orange.400"
                         _hover={{ cursor: "pointer" }}
                         onClick={() => {
-                          handleEditDriver(truck.id);
+                          handleEditTruck(truck.id);
                         }}
                       />
                       <CFaTrash
@@ -165,7 +163,7 @@ const Trucks = () => {
                         color="tomato"
                         _hover={{ cursor: "pointer" }}
                         onClick={() => {
-                          handleDeactivateDriver(truck.id);
+                          handleDeactivateTruck(truck.id);
                         }}
                       />
                     </HStack>

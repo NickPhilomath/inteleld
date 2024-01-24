@@ -104,3 +104,43 @@ export const STATES = [
     { value: "WV", name: "West Virginia"},
     { value: "WY", name: "Wyoming"},
 ]
+
+export const YEARS = [
+    {value: "Y04", name: "2004"},
+    {value: "Y05", name: "2005"},
+    {value: "Y06", name: "2006"},
+    {value: "Y07", name: "2007"},
+    {value: "Y08", name: "2008"},
+    {value: "Y09", name: "2009"},
+    {value: "Y10", name: "2010"},
+    {value: "Y11", name: "2011"},
+    {value: "Y12", name: "2012"},
+    {value: "Y13", name: "2013"},
+    {value: "Y14", name: "2014"},
+    {value: "Y15", name: "2015"},
+    {value: "Y16", name: "2016"},
+    {value: "Y17", name: "2017"},
+    {value: "Y18", name: "2018"},
+    {value: "Y19", name: "2019"},
+    {value: "Y20", name: "2020"},
+    {value: "Y21", name: "2021"},
+    {value: "Y22", name: "2022"},
+    {value: "Y23", name: "2023"},
+    {value: "Y24", name: "2024"},
+    {value: "Y24", name: "2025"},
+    {value: "Y24", name: "2026"},
+]
+
+export const FUEL_TYPE = [
+    {value: "di", name: "Diesel"},
+    {value: "ga", name: "Gasoline"},
+    {value: "pr", name: "Propane"},
+    {value: "li", name: "Liquid Natural Gas"},
+    {value: "co", name: "Compressed Natural Gas"},
+    {value: "me", name: "Methanol"},
+    {value: "e",  name: "E-85"},
+    {value: "m",  name: "M-85"},
+    {value: "a",  name: "A55"},
+    {value: "bi", name: "Biodisel"},
+    {value: "o",  name: "Other"},
+]
