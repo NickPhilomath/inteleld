@@ -283,6 +283,7 @@ class TrucksSerializer(ModelSerializer):
     class Meta:
         model = Truck
         fields = [
+            "id",
             "unit_number",
             "make",
             "model",

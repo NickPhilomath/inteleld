@@ -19,7 +19,7 @@ import { FaPen, FaTrash } from "react-icons/fa";
 import useEntities from "../../hooks/useEntities";
 import Spinner from "../common/Spinner";
 import TruckForm from "./TruckForm";
-//import DriverFromUpdate from "./DriverFormUpdate";
+import TruckFormUpdate from "./TruckFormUpdate";
 //import DriverDeactivate from "./DriverDeactivate";
 import { Truck } from "../..";
 
@@ -96,16 +96,16 @@ const Trucks = () => {
         />
       )}
 
-      {/* {formState === "update" && (
-        <DriverFromUpdate
+      {formState === "update" && (
+        <TruckFormUpdate
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
-          driverID={initTruckId}
+          truckID={initTruckId}
         />
       )}
 
-      {formState === "deactivate" && (
+      {/* {formState === "deactivate" && (
         <DriverDeactivate
           isOpen={isOpen}
           onClose={onClose}
