@@ -19,8 +19,8 @@ import { FaPen, FaTrash } from "react-icons/fa";
 import useEntities from "../../hooks/useEntities";
 import Spinner from "../common/Spinner";
 import TruckForm from "./TruckForm";
-//import DriverFromUpdate from "./DriverFormUpdate";
-//import DriverDeactivate from "./DriverDeactivate";
+import TruckFormUpdate from "./TruckFormUpdate";
+import TruckDeactivate from "./TruckDeactivate";
 import { Truck } from "../..";
 
 const CFaPen = chakra(FaPen);
@@ -96,23 +96,23 @@ const Trucks = () => {
         />
       )}
 
-      {/* {formState === "update" && (
-        <DriverFromUpdate
+      {formState === "update" && (
+        <TruckFormUpdate
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
-          driverID={initTruckId}
+          truckID={initTruckId}
         />
       )}
 
       {formState === "deactivate" && (
-        <DriverDeactivate
+        <TruckDeactivate
           isOpen={isOpen}
           onClose={onClose}
           handleRefetch={handleRefetch}
-          driverID={initTruckId}
+          truckID={initTruckId}
         />
-      )} */}
+      )}
 
       {isLoading && <Spinner />}
 

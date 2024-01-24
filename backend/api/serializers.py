@@ -269,9 +269,9 @@ class TruckSerializer(ModelSerializer):
         ]
 
     def deactivate(id):
-        driver = Truck.objects.get(pk=id)
-        driver.is_active = False
-        driver.save()
+        truck = Truck.objects.get(pk=id)
+        truck.is_active = False
+        truck.save()
     
     def delete(id):
         truck = Truck.objects.get(pk=id)
@@ -283,6 +283,7 @@ class TrucksSerializer(ModelSerializer):
     class Meta:
         model = Truck
         fields = [
+            "id",
             "unit_number",
             "make",
             "model",

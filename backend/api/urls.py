@@ -5,7 +5,7 @@ from .views import ping_pong
 from .view.companies import companies, company
 from .view.drivers import drivers, driver, driver_deactivate
 from .view.logs import drivers_logs, driver_logs
-from .view.trucks import trucks, truck
+from .view.trucks import trucks, truck, truck_deactivate
 from .view.users import users, user
 
 urlpatterns = [
@@ -26,4 +26,5 @@ urlpatterns = [
     path("trucks/<int:id>", truck),
     path("users/", users),
     path("users/<int:id>", user),
+    path("trucks/deactivate/<int:id>", truck_deactivate),
 ]
