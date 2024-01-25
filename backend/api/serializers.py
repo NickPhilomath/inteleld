@@ -252,7 +252,8 @@ class DriverUpdateSerializer(ModelSerializer):
 
 
 ###### truck
-    
+
+
 class TruckSerializer(ModelSerializer):
     class Meta:
         model = Truck
@@ -272,7 +273,7 @@ class TruckSerializer(ModelSerializer):
         truck = Truck.objects.get(pk=id)
         truck.is_active = False
         truck.save()
-    
+
     def delete(id):
         truck = Truck.objects.get(pk=id)
         truck.delete()
@@ -315,6 +316,7 @@ class TrucksUpdateSerializer(ModelSerializer):
 
         return instance
 
+
 class TruckCreateSerializer(ModelSerializer):
     class Meta:
         model = Truck
@@ -331,7 +333,8 @@ class TruckCreateSerializer(ModelSerializer):
             "notes",
         ]
 
-# view all
+
+###### logs
 class LogLocationSerializer(ModelSerializer):
     class Meta:
         model = Location
@@ -344,14 +347,52 @@ class LogsSerializer(ModelSerializer):
     class Meta:
         model = Log
         fields = [
+            "id",
             "driver",
             "location",
             "truck",
             "status",
-            "datetime",
+            "date",
+            "time",
             "odometer",
             "eng_hours",
             "notes",
             "document",
             "trailer",
         ]
+
+    def create(self, validated_data):
+        location_data = validated_data.pop("location")
+        location = Location.objects.create(**location_data)
+        log = Log.objects.create(location=location, **validated_data)
+        # log = Log.create(**validated_data)
+        return log
+
+
+# create
+
+
+# class LogCreateLocationSerializer(ModelSerializer):
+#     class Meta:
+#         model = Location
+#         fields = ["address", "latitude", "longitude"]
+
+
+# class LogCreateSerializer(ModelSerializer):
+#     location = LogLocationSerializer()
+
+#     class Meta:
+#         model = Log
+#         fields = [
+#             "driver",
+#             "location",
+#             "truck",
+#             "status",
+#             "date",
+#             "time",
+#             "odometer",
+#             "eng_hours",
+#             "notes",
+#             "document",
+#             "trailer",
+#         ]

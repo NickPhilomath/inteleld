@@ -13,8 +13,7 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { getDateString } from "../../util";
 import useEntities from "../../hooks/useEntities";
@@ -29,12 +28,12 @@ const CFaPen = chakra(FaPen);
 const CFaTrash = chakra(FaTrash);
 
 const Drivers = () => {
-  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [initDriverId, setInitDriverId] = useState<number | undefined>();
   const [formState, setFormState] = useState<
     "create" | "update" | "deactivate"
   >("create");
+
   const {
     data: drivers,
     error,
@@ -44,16 +43,8 @@ const Drivers = () => {
     keys: ["drivers"],
     url: "/drivers",
     staleTime: 3 * 60 * 1000,
+    logoutOn404: true,
   });
-
-  useEffect(() => {
-    // this shit it causing to force user to login twice
-    if (error?.response?.status === 401) {
-      navigate("/login");
-      // so i fixed it by changing status code, it doesnt execute here again
-      error.response.status = 0;
-    }
-  }, [error]);
 
   const handleRefetch = () => {
     setFormState("create");

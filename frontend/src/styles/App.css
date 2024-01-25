@@ -1,0 +1,42 @@
+.chart {
+    user-select: none;
+    position: relative;
+    width: 100%;
+}
+
+.chart-image {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-wrapper {
+    position: absolute;
+    top: 16.7%;
+    left: 2.8%;
+    width: 96.9%;
+    height: 83%;
+    z-index: 2;
+
+    span {
+        position: absolute;
+        background-color: rgb(58, 115, 229);
+        height: 2px;
+    }
+
+    .of {
+        top: 13%;
+    }
+
+    .sb {
+        top: 37%;
+    }
+
+    .dr {
+        top: 63%;
+    }
+
+    .on {
+        top: 87%;
+    }
+
+}

@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from .const import (
     LOG_STATUS,
-    DEFAULT_LOG_STATUS,
     USER_ROLES,
     COUNTRIES,
     STATES,
@@ -83,10 +82,9 @@ class Log(models.Model):
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     truck = models.ForeignKey(Truck, on_delete=models.SET_NULL, null=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(
-        max_length=2, choices=LOG_STATUS, default=DEFAULT_LOG_STATUS
-    )
-    datetime = models.DateTimeField()
+    status = models.CharField(max_length=2, choices=LOG_STATUS)
+    date = models.DateField()
+    time = models.TimeField()
     odometer = models.IntegerField(null=True)
     eng_hours = models.DecimalField(max_digits=6, decimal_places=1, null=True)
     notes = models.CharField(max_length=20, null=True)

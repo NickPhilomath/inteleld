@@ -19,7 +19,7 @@ urlpatterns = [
     path("drivers/", drivers),
     path("drivers/logs", drivers_logs),
     path("drivers/<int:id>", driver),
-    path("drivers/<int:id>/logs", driver_logs),
+    path("drivers/<int:id>/logs/<str:date>", driver_logs),
     path("drivers/deactivate/<int:id>", driver_deactivate),
     #
     path("trucks/", trucks),

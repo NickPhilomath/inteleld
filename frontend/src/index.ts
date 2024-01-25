@@ -7,11 +7,26 @@ export interface Auth {
 }
   
 export interface Location {
+    address: string;
     latitude: number;
     longitude: number;
     speed: number;
 }
   
+export interface Log {
+    id: number;
+    driver: number;
+    truck: null;
+    status: 'of' | 'sb' | 'dr' | 'on' | 'pc' | 'ym';
+    date: string;
+    time: string;
+    odometer: number;
+    eng_hours: number;
+    notes: string;
+    document: string;
+    trailer: string;
+}
+
 export interface Truck {
     id: number;
     unit_number: string;

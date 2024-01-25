@@ -46,7 +46,6 @@ const Login = () => {
   const handleShowClick = () => setShowPassword(!showPassword);
 
   const onSubmit = async (data: FieldValues) => {
-    console.log("1", data);
     post(data, (data: Auth) => {
       window.localStorage.setItem(
         "auth",
@@ -56,7 +55,7 @@ const Login = () => {
           refreshToken: data?.refresh,
         })
       );
-      navigate("/drivers");
+      navigate("/logs");
     });
   };
 
