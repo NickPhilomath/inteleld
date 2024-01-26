@@ -1,33 +1,22 @@
-import chartday from "../../assets/chartday.svg";
+import {
+  chakra,
+  Table,
+  TableContainer,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  HStack,
+} from "@chakra-ui/react";
+import { FaPen } from "react-icons/fa";
 import useEntities from "../../hooks/useEntities";
+import LogChart from "./LogChart";
 import { Log } from "../..";
+import Msg from "../common/Msg";
+import LogStatus from "../common/LogStatus";
 
-const dayInSeconds = 24 * 60 * 60;
-
-const timeInSeconds = (time: string) => {
-  var a = time.split(":"); // split it at the colons
-  // minutes are worth 60 seconds. Hours are worth 60 minutes.
-  var seconds = +a[0] * 60 * 60 + +a[1] * 60 + +a[2];
-  return seconds;
-};
-
-const getLogLeft = (time: string) => {
-  var seconds = timeInSeconds(time);
-  var left = (seconds * 100) / dayInSeconds; // calculate left margin in %
-  return left + "%";
-};
-
-const getLogWidth = (data: Log[], index: number) => {
-  var l1 = timeInSeconds(data[index].time);
-  var l2 =
-    index === data.length - 1
-      ? dayInSeconds
-      : timeInSeconds(data[index + 1].time);
-
-  var width = ((l2 - l1) * 100) / dayInSeconds;
-
-  return width + "%";
-};
+const CFaPen = chakra(FaPen);
 
 const DriverLog = () => {
   const {
@@ -43,23 +32,69 @@ const DriverLog = () => {
   });
 
   return (
-    <div className="chart">
-      <img src={chartday} alt="chartday" className="chart-image" />
-      <div className="chart-wrapper">
-        {logs?.map((log, index) => {
-          return (
-            <span
-              key={log.id}
-              className={log.status}
-              style={{
-                left: getLogLeft(log.time),
-                width: getLogWidth(logs, index),
-              }}
-            ></span>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      <LogChart logs={logs || []} />
+
+      <TableContainer mt={10}>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th isNumeric>No</Th>
+              <Th>status</Th>
+              <Th>start (EST)</Th>
+              <Th>duration</Th>
+              <Th>location</Th>
+              <Th>vehicle</Th>
+              <Th>odometer</Th>
+              <Th>eng. hours</Th>
+              <Th>notes</Th>
+              <Th>document</Th>
+              <Th>trailer</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {logs?.map((log, index) => {
+              return (
+                <Tr key={log.id}>
+                  <Td isNumeric>{index + 1}</Td>
+                  <Td>
+                    <LogStatus status={log.status} />
+                  </Td>
+                  <Td>{log.time}</Td>
+                  <Td>*</Td>
+                  <Td>{log.location.address}</Td>
+                  <Td>
+                    {log.truck || (
+                      <Msg level="error" bold>
+                        not assigned
+                      </Msg>
+                    )}
+                  </Td>
+                  <Td>{log.odometer}</Td>
+                  <Td>{log.eng_hours}</Td>
+                  <Td>{log.notes}</Td>
+                  <Td>{log.document}</Td>
+                  <Td>{log.trailer}</Td>
+
+                  <Td>
+                    <HStack fontSize={20}>
+                      <CFaPen
+                        color="orange.400"
+                        _hover={{ cursor: "pointer" }}
+                        onClick={() => {
+                          // handleEditlog(log.id);
+                        }}
+                      />
+                    </HStack>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

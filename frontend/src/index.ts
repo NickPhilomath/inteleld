@@ -20,6 +20,7 @@ export interface Log {
     status: 'of' | 'sb' | 'dr' | 'on' | 'pc' | 'ym';
     date: string;
     time: string;
+    location: Location;
     odometer: number;
     eng_hours: number;
     notes: string;
