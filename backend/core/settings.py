@@ -41,13 +41,13 @@ DEBUG = True
 CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = []
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "INSECURE_KEY_kjh23uf3iu#UF38fhF*B#8#F#*FG")
 SAMSARA_API_KEYS = get_list(os.getenv("SAMSARA_API_KEYS"))
 OWM_API_KEY = os.getenv("OWM_API_KEY")
 DB_URL = os.getenv("DB_URL")
-MYSQL_USER = os.getenv("MYSQL_USER")
-MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-MYSQL_DATABASE_NAME = os.getenv("MYSQL_DATABASE_NAME")
+# MYSQL_USER = os.getenv("MYSQL_USER")
+# MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+# MYSQL_DATABASE_NAME = os.getenv("MYSQL_DATABASE_NAME")
 
 
 # Application definition
@@ -132,8 +132,8 @@ DATABASES = {
     # }
     "default": dj_database_url.config(
         # mysql://USER:PASSWORD@HOST:PORT/NAME
-        # default="mysql://root:MyPassword@db/inteleld_db",
-        default=DB_URL,
+        default="mysql://root:MyPassword@db/inteleld_db",
+        # default=DB_URL,
         conn_max_age=600,
         # conn_health_checks=True,
     )

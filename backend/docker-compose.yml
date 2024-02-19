@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  api:
+    depends_on:
+      - db
+    build: .
+    ports:
+      - 8000:8000
+    command: ./docker-entrypoint.sh
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+    volumes:
+      - .:/app
+
+  db:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    environment:
+      # - DB_URL=mysql://db/mysqldata
+      - MYSQL_DATABASE=inteleld_db
+      - MYSQL_ROOT_PASSWORD=MyPassword
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:

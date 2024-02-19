@@ -14,3 +14,4 @@ COPY . .
 EXPOSE 3000
 
 CMD ["npm", "run", "--host", "dev"]
+# CMD ["npm", "run", "build"]
